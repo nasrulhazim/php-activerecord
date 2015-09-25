@@ -21,14 +21,19 @@ class AR {
 
 		return true;
 	}
-}
 
-function ar_init() {
-	$connections = array(
-		'development' => 'mysql://'.DB_USER.':'.DB_PASSWORD.'@'.DB_HOST.'/'.DB_NAME,
-	);
+	public static function init($username, $password, $database, $host) {
 
-	AR::$conn = ActiveRecord\Config::instance();
-	AR::$conn->set_model_directory(AR::$model_directories);
-	AR::$conn->set_connections($connections);
+		if(empty($username) || empty($database) || empty($host)) {
+			throw new Exception("Please configure your database connection properly", 1);
+		}
+
+		$connections = array(
+			'development' => 'mysql://'.$username.':'.$password.'@'.$host.'/'.$database,
+		);
+
+		self::$conn = ActiveRecord\Config::instance();
+		self::$conn->set_model_directory(AR::$model_directories);
+		self::$conn->set_connections($connections);
+	}
 }
